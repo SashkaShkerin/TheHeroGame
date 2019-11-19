@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Costatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- HEADER ================================= -->
+  <div class="header_game">
+    <div class="conteiner_progress_bar">
+      <div class="progress_bar">
+      </div>
+    </div>
+
+    <div class="left_head_sidebar">
+      <div class="left_sid_span cont_hp">
+        <span class="span_hp_txt">HP:</span>
+        <span class="span_hp">100</span>
+        <div class="conteiner_line_hp">
+          <div class="line_hp"></div>
+        </div>
+      </div>
+      <div class="left_sid_span cont_st">
+        <span class="span_st_txt">ST:</span>
+        <span class="span_st">100</span>
+        <div class="conteiner_line_st">
+          <div class="line_st"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right_head_sidebar">
+      <span class="span_user_name">UserName</span>
+      <p class="game_time">
+        <span class="right_sid_span">time:</span>
+        <span class="span_time">0:0</span>
+      </p>
+      <p class="count_monstrs">
+        <span class="right_sid_span">monstr:</span>
+        <span class="cou_mon">0</span>
+      </p>
+      <p class="exp_hero">
+        <span class="right_sid_span">exp:</span>
+        <span class="span_exp_hero">0</span>
+      </p>
+    </div>
+
+  </div>
+
+
+  <!-- MENU ================================= -->
+  <div class="conteiner_menu">
+    <div class="bg_menu"></div>
+    <div class="menu">
+      <div class="conteiner_head_menu">
+        <span class="label_menu">МЕНЮ</span>
+        <span data-text="заново" class="btn_menu btn_restart_game_menu wave_effect">заново</span>
+        <span data-text="новая игра" class="btn_menu btn_new_game_menu wave_effect">новая игра</span>
+      </div>
+
+      <div class="conteiner_hot_key_list">
+        <span class="span_hot_key">горячие клавиши:</span>
+        <div class="hot_key_list">
+
+          <div class="conteiner_scroll_bar_hot_key">
+            <div class="scroll"></div>
+          </div>
+
+          <div class="conteiner_hot_key_list_scroll">
+
+            <div class="conteiner_key_inf">
+              <div class="conteiner_btn_inf">
+                <div data-text="Esc" class="btn_inf wave_effect">Esc</div>
+              </div>
+              <span class="label_btn_inf">Меню</span>
+            </div>
+
+            <div class="conteiner_key_inf">
+              <div class="conteiner_btn_inf">
+                <div data-text="P" class="btn_inf wave_effect">P</div>
+              </div>
+              <span class="label_btn_inf">Пауза</span>
+            </div>
+
+            <div class="conteiner_key_inf">
+              <div class="conteiner_btn_inf">
+                <div data-text="D" class="btn_inf wave_effect">D</div>
+                <span class="span_del_btn">,</span>
+                <div data-text="&#8594;" class="btn_inf wave_effect">&#8594;</div>
+              </div>
+              <span class="label_btn_inf">Вправо</span>
+            </div>
+
+            <div class="conteiner_key_inf">
+              <div class="conteiner_btn_inf">
+                <div data-text="A" class="btn_inf wave_effect">A</div>
+                <span class="span_del_btn">,</span>
+                <div data-text="&#8592;" class="btn_inf wave_effect">&#8592;</div>
+              </div>
+              <span class="label_btn_inf">Влево</span>
+            </div>
+
+            <div class="conteiner_key_inf">
+              <div class="conteiner_btn_inf">
+                <div data-text="Space" class="btn_inf btn_inf_space wave_effect">Space</div>
+              </div>
+              <span class="label_btn_inf">Атака</span>
+            </div>
+
+            <div class="conteiner_key_inf">
+              <div class="conteiner_btn_inf">
+                <div data-text="1" class="btn_inf wave_effect">1</div>
+                <span class="span_del_btn">,</span>
+                <div data-text="2" class="btn_inf wave_effect">2</div>
+              </div>
+              <span class="label_btn_inf">Режима атаки</span>
+            </div>
+
+            <div class="conteiner_key_inf">
+              <div class="conteiner_btn_inf">
+                <div data-text="Shift" class="btn_inf wave_effect">Shift</div>
+              </div>
+              <span class="label_btn_inf">Бег</span>
+            </div>
+
+            <div class="conteiner_key_inf">
+              <div class="conteiner_btn_inf">
+                <div data-text="Shift" class="btn_inf wave_effect">Shift</div>
+                <span class="span_del_btn">+</span>
+                <div data-text="Alt" class="btn_inf wave_effect">Alt</div>
+              </div>
+              <span class="label_btn_inf">Супер Бег</span>
+            </div>
+
+            <div class="conteiner_key_inf">
+              <div class="conteiner_btn_inf">
+                <div data-text="Shift" class="btn_inf wave_effect">F</div>
+              </div>
+              <span class="label_btn_inf">Блок</span>
+            </div>
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="conteiner_pause"></div>
+
+  <!-- CONTEINER GAME ================================= -->
+  <div class="conteiner_game">
+
+    <div class="hero">
+      <img class="animat_hero_img" src="img/hero/gif/idle.gif" alt="">
+    </div>
+
+
+  </div>
+
+
+
+
+
+  <script src="js/jQuery.js"></script>    <!-- jQuery -->
+  <script src="js/main.js"></script>    <!--  функционал страницы -->
+  <script src="js/hero.js"></script>    <!--  функционал героя -->
+  <script src="js/monstrs.js"></script>    <!--  функционал монстров -->
+  <script src="js/game.js"></script>    <!--  общий функционал игры -->
+</body>
+</html>
