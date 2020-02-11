@@ -51,7 +51,10 @@ var game = {
   progress: function(){
     let prog = Math.abs(hero.position) * ( 100 / $('.conteiner_game').outerWidth() )
     $('.progress_bar').css({'width' : prog + "%"});
-    if(prog == 100) $('.progress_bar').addClass('progress_bar_win');
+    if(prog == 100)  {
+      hero.status('win');
+      $('.progress_bar').addClass('progress_bar_win');
+    }
     else if (prog != 100) $('.progress_bar').removeClass('progress_bar_win');
   },
   console: function(){  // вывод всех значений объекта в сонсоль
@@ -68,22 +71,60 @@ var game = {
 
 }
 
-// вывод таймера игры
-setInterval(function(){
-  $('.span_time').text(game.time.eventTime());
-}, 1000);
+// определяем ширину маркеров зон
+$('.mark_zon').css({'width' : $('.zon').outerWidth() * ( 100 / $('.conteiner_game').outerWidth() ) + "%"});
 
-
-//вызываем функцию движения если нажаты клавиши
-setInterval(function(){
-  if(listMonstr[0].length + listMonstr[1].length + listMonstr[2].length == maxCountMonstr) {
-    for (var l = 0; l < listMonstr.length; l++) {
-      for (var v = 0; v < listMonstr[l].length; v++) {
-        listMonstr[l][v].possivMove();
+setInterval(function (power) {
+  // остлеживаем режим боя монстра (если игрок близко к монстру)
+  for (var l = 0; l < listMonstr.length; l++) {
+    for (var v = 0; v < listMonstr[l].length; v++) {
+      if(listMonstr[l][v].status){
+        if(listMonstr[l][v].atac) {
+          hero.writeHP(listMonstr[l][v].power, true);
+        }
       }
     }
   }
-}, 5);
+
+}, 3000);
+
+// вывод таймера игры
+setInterval(function(){
+  $('.span_time').text(game.time.eventTime());
+
+  // зона востановления жиззни
+  if(hero.position < ($(window).outerWidth() / 3)) {
+    if(hero.hp < 100) {
+      hero.writeHP(-5, false);
+    }
+  }
+
+  if(game.keyPress.keyShift) {
+    hero.writeST(15);
+  } else {
+    hero.writeST(-5);
+  }
+
+  if(game.keyPress.keyAlt) {
+    hero.writeST(25);
+  }
+
+}, 1000);
+
+//вызываем функцию движения если нажаты клавиши
+$(window).on('load', function () {
+  setInterval(function(){
+    if(game.game == true){
+      if(listMonstr[0].length + listMonstr[1].length + listMonstr[2].length == maxCountMonstr) {
+        for (var l = 0; l < listMonstr.length; l++) {
+          for (var v = 0; v < listMonstr[l].length; v++) {
+            listMonstr[l][v].possivMove();
+          }
+        }
+      }
+    }
+  }, 5);
+});
 
 
 //  событие движения игрока
@@ -91,9 +132,16 @@ $('.hero').on('shift', function(){
   // функционал сдвига ==========
   let functionShift = function(){
     if (game.game == true) {
+
+      // если герой выдохся снижаем скорость
+      if(hero.st <= 0) {
+        hero.shift = 3;
+      }
+
       // меняем агтмацию движения героя
       if( hero.shift == 3) hero.animation_src('img/hero/gif/walk.gif');
       else if ( hero.shift == 5 ) hero.animation_src('img/hero/gif/run.gif');
+
 
       // сдвигаем ВПРАВО героя
       if(game.keyPress.rigthMove == true){    // если зажата клавиша вправо
@@ -135,7 +183,6 @@ $('.hero').on('shift', function(){
           game.outputPosition(game.position);
         }
       }
-
       // контролируем прогресс бар
       game.progress()
     }
@@ -153,8 +200,28 @@ $('.hero').on('shift', function(){
 
 
 
+
+
 $(document).on('keydown', function(event){
   // console.log(event.keyCode);
+
+  // KEYDOWN SPACE
+  // атака героя
+  if(event.keyCode == 32) {
+    $('.animat_hero_img').attr('src', 'img/hero/gif/attack1.gif');
+
+    for (var l = 0; l < listMonstr.length; l++) {
+      for (var v = 0; v < listMonstr[l].length; v++) {
+        let monst = listMonstr[l][v];
+        // console.log(monst);
+        if(hero.position + $('.hero').outerWidth() + 100 >= monst.positionX && hero.position - 100 <= (monst.positionX + $('.' + monst.name).outerWidth())){
+          setTimeout(function(){
+            monst.writeHP(hero.power);
+          }, 500);
+        }
+      }
+    }
+  }
 
   // KEYDOWN ESC
   if( event.keyCode == 27) {
@@ -172,7 +239,16 @@ $(document).on('keydown', function(event){
       $('.header_game').addClass('blur');
       $('.conteiner_game').addClass('blur');
       $('.menu').addClass('active_menu');
-      hero.animation_src('img/hero/img/idle/idle0001.png'); // ставим стандартную анимацию движения
+
+      $('.hero').css({'opacity': '0'}); // скрываем героя
+      // скрываем всех монстров
+      if(listMonstr[0].length + listMonstr[1].length + listMonstr[2].length == maxCountMonstr) {
+        for (var l = 0; l < listMonstr.length; l++) {
+          for (var v = 0; v < listMonstr[l].length; v++) {
+            $("." + listMonstr[l][v].name).css({'opacity': '0'});
+          }
+        }
+      }
 
     } else { // если меню включенно, выключаем
       game.game = true;
@@ -181,7 +257,17 @@ $(document).on('keydown', function(event){
       $('.header_game').removeClass('blur');
       $('.conteiner_game').removeClass('blur');
       $('.menu').removeClass('active_menu');
-      hero.animation_src('img/hero/gif/idle.gif'); // ставим стандартную анимацию движения
+
+      $('.hero').css({'opacity': '1'}); // показываем героя
+      // показываем всех монстров
+      if(listMonstr[0].length + listMonstr[1].length + listMonstr[2].length == maxCountMonstr) {
+        for (var l = 0; l < listMonstr.length; l++) {
+          for (var v = 0; v < listMonstr[l].length; v++) {
+            $("." + listMonstr[l][v].name).css({'opacity': '1'});
+          }
+        }
+      }
+
     }
   }
 
@@ -196,7 +282,15 @@ $(document).on('keydown', function(event){
         $('.conteiner_pause').removeClass('active_conteiner_start');
         $('.header_game').addClass('blur');
         $('.conteiner_game').addClass('blur');
-        hero.animation_src('img/hero/img/idle/idle0001.png'); // ставим стандартную анимацию движения
+        $('.hero').css({'opacity': '0'}); // скрываем героя
+        // скрываем всех монстров
+        if(listMonstr[0].length + listMonstr[1].length + listMonstr[2].length == maxCountMonstr) {
+          for (var l = 0; l < listMonstr.length; l++) {
+            for (var v = 0; v < listMonstr[l].length; v++) {
+              $("." + listMonstr[l][v].name).css({'opacity': '0'});
+            }
+          }
+        }
 
       } else { // если пауза включенна - выключаем
         console.log("hi");
@@ -206,7 +300,15 @@ $(document).on('keydown', function(event){
         $('.conteiner_pause').removeClass('active_conteiner_stop');
         $('.header_game').removeClass('blur');
         $('.conteiner_game').removeClass('blur');
-        hero.animation_src('img/hero/gif/idle.gif'); // ставим стандартную анимацию движения
+        $('.hero').css({'opacity': '1'}); // показываем героя
+        // показываем всех монстров
+        if(listMonstr[0].length + listMonstr[1].length + listMonstr[2].length == maxCountMonstr) {
+          for (var l = 0; l < listMonstr.length; l++) {
+            for (var v = 0; v < listMonstr[l].length; v++) {
+              $("." + listMonstr[l][v].name).css({'opacity': '1'});
+            }
+          }
+        }
       }
     }
   }
@@ -220,15 +322,25 @@ $(document).on('keydown', function(event){
   }
   // KEYDOWN RIGHT + SHIFT
   else if (event.keyCode == 16) { // (быстрый бег)
-    game.keyPress.keyShift = true;
-    if(game.keyPress.rigthMove && game.keyPress.keyShift)
-    hero.shift = 5;
+    if(hero.st > 0) {
+      game.keyPress.keyShift = true;
+      if(game.keyPress.rigthMove && game.keyPress.keyShift)
+      hero.shift = 5;
+    } else {
+      game.keyPress.keyShift = false;
+      hero.shift = 3;
+    }
   }
   // KEYDOWN RIGHT + SHIFT + ALT
   else if (event.keyCode == 18) { //(очень быстрый бег)
-    game.keyPress.keyAlt = true;
-    if(game.keyPress.keyShift && game.keyPress.keyAlt)
-    hero.shift = 7;
+    if(hero.st > 0) {
+      game.keyPress.keyAlt = true;
+      if(game.keyPress.keyShift && game.keyPress.keyAlt && hero.st > 0)
+      hero.shift = 7;
+    } else {
+      game.keyPress.keyAlt = false;
+      hero.shift = 3;
+    }
   }
 
   // KEYDOWN LEFT

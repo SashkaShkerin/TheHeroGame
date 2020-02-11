@@ -76,8 +76,10 @@ $('.hot_key_list').on('mousewheel', function(event){
 });
 
 
+// перезагружаем игру
 // =============================================================================
 $('.btn_restart_game_menu').on('click', function(){
+  hero.status('new');
   // убираем меню
   game.game = true;
   game.keyPress.esc = false;
@@ -88,8 +90,14 @@ $('.btn_restart_game_menu').on('click', function(){
   $('.mark_monstr').remove();
   hero.animation_src('img/hero/gif/idle.gif'); // ставим стандартную анимацию движения
   // ============
-
+  $('.hero').css({'opacity' : '1'});
   hero.restart();
   game.restart();
   removeObjectMonstr();
+});
+
+
+
+$('.btn_new_game_menu').on('click', function(){
+  console.table(listMonstr);
 });
